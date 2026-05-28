@@ -8,6 +8,8 @@ async function seedPaises() {
 		console.log('Países sembrados exitosamente');
 	} catch (error) {
 		console.error('Error al sembrar los países:', error);
+	} finally {
+		process.exit();
 	}
 }
 
