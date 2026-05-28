@@ -87,7 +87,7 @@ const PaisSchema = new mongoose.Schema({
 	},
 	tipoDocumento: { type: String, trim: true, required: true, default: 'Pais' },
 	timestamp: { type: Date, default: Date.now },
-	creador: process.env.CREATOR,
+	creador: { type: String, defalt: process.env.CREATOR, trim: true, required: true } 
 });
 // El tercer argumento 'Paises' es el nombre de la colección en MongoDB, y el primer argumento 'Paises' es el nombre del modelo que se usará en el código para referenciar esta colección.
 const Paises = mongoose.model('Paises', PaisSchema, 'Paises');

@@ -14,7 +14,7 @@ const DatosFormularioSchema = new mongoose.Schema({
 		required: true,
 		default: 'DatosForm',
 	},
-	creador: process.env.CREATOR,
+	creador: { type: String, defalt: process.env.CREATOR, trim: true, required: true } 
 });
 // tercer parametro es el nombre de la colección en la base de datos
 const DatosForm = mongoose.model('DatosFrom', DatosFormularioSchema, 'Paises');
