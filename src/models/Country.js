@@ -1,4 +1,7 @@
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+
+dotenv.config();
 
 const PaisSchema = new mongoose.Schema({
 	nombre: {
@@ -83,7 +86,8 @@ const PaisSchema = new mongoose.Schema({
 		anio: { type: Number, min: 1912, max: new Date().getFullYear() }, // Recortar el rango del año 1912 - 2026;
 	},
 	tipoDocumento: { type: String, trim: true, required: true, default: 'Pais' },
-	timestamp: { type: Date, default: Date.now }, // timestamp agrega y administra automáticamente los campos createdAt (fecha de creación) y updatedAt (fecha de actualización) cada vez que se crea o actualiza un documento en la colección.
+	timestamp: { type: Date, default: Date.now },
+	creador: process.env.CREATOR,
 });
 // El tercer argumento 'Paises' es el nombre de la colección en MongoDB, y el primer argumento 'Paises' es el nombre del modelo que se usará en el código para referenciar esta colección.
 const Paises = mongoose.model('Paises', PaisSchema, 'Paises');

@@ -1,4 +1,7 @@
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+
+dotenv.config();
 
 // Esquema para almacenar Las URLs de las banderas, zonas horarias, y subregiones de cada pais de América en un documento, para luego usar estos datos para los formularios de creación y edición de países.
 const DatosFormularioSchema = new mongoose.Schema({
@@ -10,7 +13,8 @@ const DatosFormularioSchema = new mongoose.Schema({
 		trim: true,
 		required: true,
 		default: 'DatosForm',
-	}, // Campo para identificar el tipo de documento, en este caso 'DatosForm', para que sea un documento único en la colección 'Paises'.
+	},
+	creador: process.env.CREATOR,
 });
 // tercer parametro es el nombre de la colección en la base de datos
 const DatosForm = mongoose.model('DatosFrom', DatosFormularioSchema, 'Paises');
