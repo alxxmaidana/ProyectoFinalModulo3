@@ -92,8 +92,13 @@ function transformarPaisesAlFormatoModelo(paises) {
 	});
 }
 
-export async function upsertPisesHispanos(paises) {
+export async function upsertPaisesHispanos(paises) {
 	const paisesHispanos = filtrarPaisesHispanos(paises);
 	const paisesFormateados = transformarPaisesAlFormatoModelo(paisesHispanos);
 	return await Countries.uspertPaises(paisesFormateados);
+}
+
+// Servicio solo para llamar el método del repositorio, que obtiene todos los países
+export async function obtenerTodosLosPaises() {
+	return await Countries.obtenerPaises();
 }
