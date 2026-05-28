@@ -54,7 +54,7 @@ class CountriesRepository extends InterfaceCountriesRepository {
 			$and: [
 				{
 					tipoDocumento: 'DatosForm',
-					creado: process.env.CREATOR,
+					creador: process.env.CREATOR,
 				},
 			],
 		};
