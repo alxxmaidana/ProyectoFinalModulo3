@@ -1,37 +1,41 @@
-// Implementación del los metodos de la interfaz de repositorio para países
-
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import Paises from '../models/Country.js';
 import DatosForm from '../models/FormData.js';
 import InterfaceCountriesRepository from './InterfaceCountriesRepository.js';
 
-// Consulta primero si el ID es un ObjectId que es el formato que MongoDB utiliza para los IDs.
+dotenv.config();
+
+// Consulta primero si el ID es un ObjectId, que es el formato que MongoDB utiliza para los IDs.
 function validarId(id) {
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		throw new Error('ID no válido');
 	}
 }
 
-// Implementar los métodos de la interfaz de repositorio para países
 class CountriesRepository extends InterfaceCountriesRepository {
-	// Obtener todos los países de la colección
 	async obtenerPaises() {
-		return await Paises.find({});
+		const filtro = {
+			$and: [
+				{
+					tipoDocumento: 'Pais',
+					creador: process.env.CREATOR,
+				},
+			],
+		};
+		return await Paises.find(filtro);
 	}
 
-	// Buscar un país por su  ID
 	async buscar(id) {
 		validarId(id);
 		return await Paises.findById(id);
 	}
 
-	// Crear un nuevo país en la colección
 	async crear(pais) {
 		const nuevoPais = new Paises(pais);
 		return await nuevoPais.save();
 	}
 
-	// Actualizar por completo un país por si ID
 	async actualizar(id, paisActualizado) {
 		validarId(id);
 		return await Paises.findByIdAndUpdate(id, paisActualizado, {
@@ -39,41 +43,53 @@ class CountriesRepository extends InterfaceCountriesRepository {
 		});
 	}
 
-	// Buscar y eliminar un país por su ID
 	async eliminar(id) {
 		validarId(id);
 		return await Paises.findByIdAndDelete(id);
 	}
 
-	// Busca el documento con los datos recopilados para los formularios, es un documento único en la Colección 'DatosForm'
+	// Obtener de la colección el documeto úico con los datos para los formularios
 	async obtenerDatosForm() {
-		return await DatosForm.findOne({});
+		const filtro = {
+			$and: [
+				{
+					tipoDocumento: 'DatosForm',
+					creado: process.env.CREATOR,
+				},
+			],
+		};
+		// Usar el método findOne, porque find retorna un array de un solo documento.
+		return await DatosForm.findOne(filtro);
 	}
 
-	// Verificar si existe un país en la colección por su nombre oficial, para evitar duplicados
+	// Verificar si existe un país en la colección por su nombre oficial y creador, para evitar duplicados
 	async verificarSiExiste() {
 		const filtro = {
-			'nombre.oficial': nombre.oficial,
+			$and: [
+				{
+					'nombre.oficial': nombre.oficial,
+					tipoDocumento: 'Pais',
+					creador: process.env.CREATOR,
+				},
+			],
 		};
-		// El método exists busca un documento que cumpla con el filtro y devuelve su _id
-		//  Es más rapido y eficiente que el método find o findOne porque no devuelve todo el documento.
+		// El método Model.exists(), devuelve un objeto con el _id del documento encontrado (true), si no devuelve null (false)
 		return await Paises.exists(filtro);
 	}
 
 	// Hacer un uspert de cada país
 	async uspertPaises(paises) {
-		// map() con async nos devuelve un array de promesas, una promesa por cada paísm, y promise.all() espera a que todas las promesas se resuelvan y devuelve un array con los resultados de cada promesa.
 		return await Promise.all(
 			paises.map(async (pais) => {
 				const filtro = {
 					$and: [
 						{
-							tipoDocumento: 'Pais',
 							'nombre.oficial': pais.nombre.oficial,
+							tipoDocumento: 'Pais',
+							creador: process.env.CREATOR,
 						},
 					],
 				};
-				// Hacemos el upsert del país, si ya existe lo reemplaza, sino lo crea.
 				return await Paises.replaceOne(filtro, pais, { upsert: true });
 			}),
 		);
@@ -82,7 +98,12 @@ class CountriesRepository extends InterfaceCountriesRepository {
 	// Hacer un upsert para el documento con los datos para el formulario, es un documento único en la colección 'DatosForm', si ya existe lo reemplaza, sino lo crea.
 	async upsertDocumento(documento) {
 		const filtro = {
-			tipoDocumento: 'DatosForm',
+			$and: [
+				{
+					tipoDocumento: 'DatosForm',
+					creador: process.env.CREATOR,
+				},
+			],
 		};
 		return await DatosForm.replaceOne(filtro, documento, {
 			upsert: true,
