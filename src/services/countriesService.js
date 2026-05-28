@@ -102,3 +102,13 @@ export async function upsertPaisesHispanos(paises) {
 export async function obtenerTodosLosPaises() {
 	return await Countries.obtenerPaises();
 }
+
+// Servicio que solo llama al método para obtener el documento con los datos para los formularios
+export async function obtenerDocumentoDatosFormulario() {
+	return await Countries.obtenerDatosFormulario();
+}
+
+// Servicio que solo llama al método para obtener el documento con los datos para los formularios
+export async function buscarPorId(id) {
+	return await Countries.buscar(id);
+}

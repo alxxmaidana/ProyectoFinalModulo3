@@ -1,4 +1,7 @@
 import {
+	verificarSiElPaisExiste,
+	buscarPorId,
+	obtenerDocumentoDatosFormulario,
 	obtenerTodosLosPaises,
 	upsertPaisesHispanos,
 	uspertDocumentoFormulario,
@@ -24,12 +27,54 @@ export async function sembrarPaises() {
 export async function getTodosLosPaises(_req, res) {
 	try {
 		const paises = await obtenerTodosLosPaises();
-		console.log('Cantidad de paisese obtenidos:',paises.length)
+		if (paises.length === 0) {
+			return res.status(404).json({
+				mensaje: 'No se encontron ningún país en la colección'
+			})
+		}
+		console.log('Cantidad de paisese obtenidos:', paises.length);
 		// Monstrar los paises obtenidos
 		res.status(200).json(paises);
 	} catch (err) {
 		res.status(500).json({
-			Mensaje: 'Error al obtener los paises',
+			mensaje: 'Error al obtener los paises',
+			error: err.message,
+		});
+	}
+}
+
+export async function getDatosFormulario(_req, res) {
+	try {
+		const datosFormulario = await obtenerDocumentoDatosFormulario()
+		console.log('Documento con los datos para formularios', datosFormulario);
+		if (!datosFormulario) {
+			return res.status(404).json({
+				mensaje: 'No se pudo encontrar el documento con los datos para los formularios'
+			})
+		}
+		res.status(200).json(datosFormulario)
+	} catch (err) {
+		res.status(500).json({
+			mensaje: 'Error al obtener los datos para el formulario',
+			error: err.message
+		});
+	}
+}
+
+// Controlador para buscar un país por id
+export async function getPaisPorId(req, res) {
+	try {
+		const { id } = req.params;
+		const pais = await buscarPorId(id);
+		if (pais.length < 1) {
+			return res.status(404).json({
+				mensaje: `No se encontro el País con el id: ${id}`
+			}); 
+		}
+		res.status(200).json(pais);
+	} catch (err) {
+		res.status(200).json({
+			mensaje: 'Error al buscar el país por id',
 			error: err.message,
 		});
 	}
