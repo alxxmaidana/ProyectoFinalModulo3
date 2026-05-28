@@ -49,7 +49,7 @@ class CountriesRepository extends InterfaceCountriesRepository {
 	}
 
 	// Obtener de la colección el documeto úico con los datos para los formularios
-	async obtenerDatosForm() {
+	async obtenerDatosFormulario() {
 		const filtro = {
 			$and: [
 				{
