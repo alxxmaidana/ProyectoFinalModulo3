@@ -50,7 +50,7 @@ const PaisSchema = new mongoose.Schema({
 			maxlength: 40,
 		},
 	},
-	indepediente: { type: Boolean, required: true, default: false },
+	independiente: { type: Boolean, required: true, default: false },
 	miembroONU: { type: Boolean, required: true, default: false },
 	salidaAlMar: { type: Boolean, required: true, default: false },
 	fifa: {
@@ -87,7 +87,12 @@ const PaisSchema = new mongoose.Schema({
 	},
 	tipoDocumento: { type: String, trim: true, required: true, default: 'Pais' },
 	timestamp: { type: Date, default: Date.now },
-	creador: { type: String, default: process.env.CREATOR, trim: true, required: true } 
+	creador: {
+		type: String,
+		default: process.env.CREATOR,
+		trim: true,
+		required: true,
+	},
 });
 // El tercer argumento 'Paises' es el nombre de la colección en MongoDB, y el primer argumento 'Paises' es el nombre del modelo que se usará en el código para referenciar esta colección.
 const Paises = mongoose.model('Paises', PaisSchema, 'Paises');
