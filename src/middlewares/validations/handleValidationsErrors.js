@@ -1,6 +1,6 @@
 import { validationResult } from 'express-validator';
 
-export const manejarErroresValidacion = (req, res, next) => {
+const manejarErroresValidacion = (req, res, next) => {
 	const errores = validationResult(req);
 	if (!errores.isEmpty()) {
 		return res.status(400).json({
@@ -13,3 +13,5 @@ export const manejarErroresValidacion = (req, res, next) => {
 	}
 	next();
 };
+
+export default manejarErroresValidacion;

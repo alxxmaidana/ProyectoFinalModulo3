@@ -168,7 +168,7 @@ const validarPaises = [
 		.notEmpty()
 		.withMessage('Indique si es independiente o no'),
 
-	body('miemboONU')
+	body('miembroONU')
 		.notEmpty()
 		.withMessage('Indique si es o no miembro de la ONU'),
 
@@ -210,7 +210,7 @@ const validarPaises = [
 		.withMessage('Ingrese la latitud')
 		.bail()
 		.isFloat({ min: -90, max: 90 })
-		.withMessage('La latitud debe ser un número entr -90 y 90'),
+		.withMessage('La latitud debe ser un número entre -90 y 90'),
 	body('coordenadas.longitud')
 		.trim()
 		.notEmpty()
