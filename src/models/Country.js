@@ -86,13 +86,15 @@ const PaisSchema = new mongoose.Schema({
 		anio: { type: Number, min: 1912, max: new Date().getFullYear() }, // Recortar el rango del año 1912 - 2026;
 	},
 	tipoDocumento: { type: String, trim: true, required: true, default: 'Pais' },
-	timestamps: true,
 	creador: {
 		type: String,
 		default: process.env.CREATOR,
 		trim: true,
 		required: true,
 	},
+},
+{
+	timestamps: true,
 });
 // El tercer argumento 'Paises' es el nombre de la colección en MongoDB, y el primer argumento 'Paises' es el nombre del modelo que se usará en el código para referenciar esta colección.
 const Paises = mongoose.model('Paises', PaisSchema, 'Paises');
