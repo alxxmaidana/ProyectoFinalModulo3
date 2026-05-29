@@ -31,7 +31,7 @@ const PaisSchema = new mongoose.Schema(
 		bandera: { type: String, trim: true, required: true }, // URL del PNG de la bandera
 		subregion: { type: String, trim: true, required: true },
 		fronteras: [{ type: String, trim: true, minlength: 3, maxlength: 3 }], // Array de códigos ISO de países vecinos
-		area: { type: Number, required: true, min: 0.1 },
+		area: { type: Number, required: true, min: 0 },
 		poblacion: { type: Number, required: true, min: 1 },
 		zonasHorarias: {
 			// Array de zonas horarias del país
