@@ -97,6 +97,10 @@ function transformarPaisesAlFormatoModelo(paises) {
 			salidaAlMar: !pais.landlocked ?? false,
 			fifa: pais.fifa ?? null,
 			latitudLongitud: pais.latlng ?? [0.0, 0.0],
+			coordenadas: {
+				latitud: pais.latlng[0] ?? 0.0,
+				longitud: pais.latlng[1] ?? 0.0,
+			},
 			indiceGini: gini,
 		};
 	});

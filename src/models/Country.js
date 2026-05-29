@@ -60,25 +60,9 @@ const PaisSchema = new mongoose.Schema(
 			minlength: 3,
 			maxlength: 3,
 		},
-		latitudLongitud: {
-			type: [Number],
-			validate: [
-				{
-					validator: (latitudLongitud) => latitudLongitud.length === 2,
-					message:
-						'El campo latitudLongitud debe ser un array de dos números: [latitud, longitud]',
-				},
-				{
-					validator: (latitudLongitud) =>
-						latitudLongitud[0] >= -90 && latitudLongitud[0] <= 90, // Validar latitud entre -90 y 90,
-					message: 'La latitud debe estar entre 90 y -90 grados',
-				},
-				{
-					validator: (latitudLongitud) =>
-						latitudLongitud[1] >= -180 && latitudLongitud[1] <= 180, // Validar longitud entre -180 y 180
-					message: 'La longitud debe estár entre 180 y -180 grados',
-				},
-			],
+		coordenadas: {
+			latitud: { type: Number, min: -90, max: 90, required: true },
+			longitud: { type: Number, min: -108, max: 180, required: true },
 		},
 		// Algunos paises no tienen dato
 		indiceGini: {
@@ -102,6 +86,6 @@ const PaisSchema = new mongoose.Schema(
 		timestamps: true,
 	},
 );
-// El tercer argumento 'Paises' es el nombre de la colección en MongoDB, y el primer argumento 'Paises' es el nombre del modelo que se usará en el código para referenciar esta colección.
+
 const Paises = mongoose.model('Paises', PaisSchema, 'Paises');
 export default Paises;
