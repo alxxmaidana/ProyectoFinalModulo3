@@ -86,7 +86,7 @@ const PaisSchema = new mongoose.Schema({
 		anio: { type: Number, min: 1912, max: new Date().getFullYear() }, // Recortar el rango del año 1912 - 2026;
 	},
 	tipoDocumento: { type: String, trim: true, required: true, default: 'Pais' },
-	timestamp: { type: Date, default: Date.now },
+	timestamps: true,
 	creador: {
 		type: String,
 		default: process.env.CREATOR,

@@ -46,11 +46,28 @@ function filtrarPaisesHispanos(paises) {
 	return paises.filter((pais) => pais.languages.spa);
 }
 
+/* ***************************************************************
+El objeto 'currencies' tiene como clave el código ISO de la moneda, 
+y como valor un objeto con el nombre y simbolo de la moneda.
+
+Con Object.values() obtenemos los valores del la clave del objeto 'currencies'
+(la clave es el código ISO de la moneda), obteniendo un array de objeto con el 
+nombre y el simbolo de la moneda, y con [0] acccemos al primer objeto del array, 
+que sería la primera moneda del país.
+***************************************************************** */
+
+/* *****************************************************************
+El objeto 'gini' tiene al año como clave y el indice de Gini como su valor.
+Con objet.values() obtenemos los valores del objeto 'gini' (el valor indice gini),
+y con Object.keys() obtenemos las claves del objeto 'gini' (año de midición).
+
+Se usa '?' para evitar el error de que el país no tenga el campo, si no lo tiene
+le asigna null.
+****************************************************************** */
+
 function transformarPaisesAlFormatoModelo(paises) {
 	return paises.map((pais) => {
 		// Obtener la primera moneda del país
-		// El objeto 'currencies' tiene como clave el código ISO de la moneda, y como valor un objeto con el nombre y simbolo de la moneda.
-		// Con Object.values() obtenemos los valores del la clave del objeto 'currencies' (la clave es el código ISO de la moneda), obteniendo un array de objeto con el nombre y el simbolo de la moneda, y con [0] acccemos al primer objeto del array, que sería la primera moneda del país.
 		const primeraMoneda = Object.values(pais.currencies)[0] ?? null;
 		const moneda = primeraMoneda
 			? {
@@ -58,10 +75,7 @@ function transformarPaisesAlFormatoModelo(paises) {
 					nombre: primeraMoneda.name ?? 'N/A',
 				}
 			: null;
-		// Obtener el valor y el año del índice Gini
-		// El objeto 'gini' tiene al año como clave y el indice de Gini como su valor.
-		// Con objet.values() obtenemos los valores del objeto 'gini' (el valor indice gini), y con Object.keys() obtenemos las claves del objeto 'gini' (año de midición)
-		// se usa ? para evitar el error de que el país no tenga el campo 'gini', y si no lo tiene, asigna null al objeto gini.
+		// Obtener el valor y el año del índice Gini.
 		const gini = pais.gini
 			? {
 					valor: Object.values(pais?.gini)[0],
@@ -69,7 +83,6 @@ function transformarPaisesAlFormatoModelo(paises) {
 				}
 			: null;
 
-		// Creamos los objetos paises con formato del modelo, y con los valores de los paises obtenidos del endpoint de la APIRestCountries
 		return {
 			nombre: {
 				comun: pais.name.nativeName.spa.common ?? pais.name?.common,
@@ -86,6 +99,7 @@ function transformarPaisesAlFormatoModelo(paises) {
 			independiente: pais.independent ?? false,
 			miembroONU: pais.unMember ?? false,
 			salidaAlMar: !pais.landlocked ?? false,
+			fifa: pais.fifa ?? null,
 			latitudLongitud: pais.latlng ?? [0.0, 0.0],
 			indiceGini: gini,
 		};
@@ -112,3 +126,4 @@ export async function obtenerDocumentoDatosFormulario() {
 export async function buscarPorId(id) {
 	return await Countries.buscar(id);
 }
+
