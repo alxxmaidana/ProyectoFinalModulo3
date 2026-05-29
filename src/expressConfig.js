@@ -16,11 +16,11 @@ app.use(methodOverride('_method'));
 
 // Redireccionar a '/paises' que es donde tengo las rutas
 app.get('/', (_req, res) => {
-	res.redirect('/countries');
+	res.redirect('/paises');
 });
 
 // Montar enrutador
-app.use('/countries', countriesRouter);
+app.use('/paises', countriesRouter);
 
 // Mensaje para rutas no encontrada para el codigo de estado 404
 app.use((_req, res) => {
