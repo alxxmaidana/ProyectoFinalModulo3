@@ -93,7 +93,7 @@ function transformarPaisesAlFormatoModelo(paises) {
 			subregion: pais.subregion ?? 'Sin Subregión',
 			fronteras: pais.borders ?? [],
 			area: pais.area ?? 0,
-			poblacion: pais.poblacion ?? 0,
+			poblacion: pais.population ?? 0,
 			zonasHorarias: pais.timezones ?? [],
 			moneda: moneda,
 			independiente: pais.independent ?? false,
