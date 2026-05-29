@@ -1,13 +1,16 @@
 import {
-	verificarSiElPaisExiste,
+	actualizarPais,
 	buscarPorId,
+	crearPais,
+	eliminarPais,
 	obtenerDocumentoDatosFormulario,
 	obtenerTodosLosPaises,
 	upsertPaisesHispanos,
 	uspertDocumentoFormulario,
+	
 } from '../services/countriesService.js';
 
-// Consumir Endpoint de paises
+// Controlador del seed de países
 export async function sembrarPaises() {
 	try {
 		const response = await fetch(
@@ -23,14 +26,16 @@ export async function sembrarPaises() {
 	}
 }
 
-// Obetener todos los países para luego renderizar el el dasbhoard
+// --------------------- Controllers crud simple (prueba) --------------//
+
+// Controlador para la ruta de obtener todos los países de la colección
 export async function getTodosLosPaises(_req, res) {
 	try {
 		const paises = await obtenerTodosLosPaises();
 		if (paises.length === 0) {
 			return res.status(404).json({
-				mensaje: 'No se encontron ningún país en la colección'
-			})
+				mensaje: 'No se encontron ningún país en la colección',
+			});
 		}
 		console.log('Cantidad de paisese obtenidos:', paises.length);
 		// Monstrar los paises obtenidos
@@ -43,20 +48,22 @@ export async function getTodosLosPaises(_req, res) {
 	}
 }
 
+// Controlador para la ruta de obtener los datos para formulario
 export async function getDatosFormulario(_req, res) {
 	try {
-		const datosFormulario = await obtenerDocumentoDatosFormulario()
+		const datosFormulario = await obtenerDocumentoDatosFormulario();
 		console.log('Documento con los datos para formularios', datosFormulario);
 		if (!datosFormulario) {
 			return res.status(404).json({
-				mensaje: 'No se pudo encontrar el documento con los datos para los formularios'
-			})
+				mensaje:
+					'No se pudo encontrar el documento con los datos para los formularios',
+			});
 		}
-		res.status(200).json(datosFormulario)
+		res.status(200).json(datosFormulario);
 	} catch (err) {
 		res.status(500).json({
 			mensaje: 'Error al obtener los datos para el formulario',
-			error: err.message
+			error: err.message,
 		});
 	}
 }
@@ -68,13 +75,60 @@ export async function getPaisPorId(req, res) {
 		const pais = await buscarPorId(id);
 		if (pais.length < 1) {
 			return res.status(404).json({
-				mensaje: `No se encontro el País con el id: ${id}`
-			}); 
+				mensaje: `No se encontro el País con el id: ${id}`,
+			});
 		}
 		res.status(200).json(pais);
 	} catch (err) {
 		res.status(200).json({
 			mensaje: 'Error al buscar el país por id',
+			error: err.message,
+		});
+	}
+}
+
+// Controller ruta para crear un país
+export async function postPais(req, res) {
+	try {
+		const pais = req.body;
+		console.log('Pais obtenido del body: ', pais);
+		await crearPais(pais);
+		console.log('Pais Creado exitosamente');
+		res.status(200).json(pais);
+	} catch (err) {
+		res.status(500).json({
+			mensaje: 'Error al crear el nuevo país',
+			error: err.message,
+		});
+	}
+}
+
+// Controller ruta para actualizar/editar país 
+export async function putPais(req, res) {
+	try {
+		const id = req.params.id;
+		const paisActualizado = req.body;
+		const respuesta = await actualizarPais(id, paisActualizado);
+		console.log(respuesta);
+		res.status(200).json(respuesta);
+	} catch (err) {
+		res.status(500).json({
+			mensaje: 'Error al actualizar/editar el país',
+			error: err.message,
+		});
+	}
+}
+
+// Controller de ruta para eliminar un país por su id 
+export async function deletePais(req, res) {
+	try {
+		const id = req.params.id;
+		const resultado = await eliminarPais(id);
+		console.log(resultado);
+		res.status(200).json(resultado);
+	} catch (err) {
+		res.status(500).json({
+			mensaje: 'Error al eliminar el País',
 			error: err.message,
 		});
 	}

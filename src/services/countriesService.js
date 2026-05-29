@@ -1,16 +1,15 @@
 import Countries from '../repositories/countriesRepository.js';
 
-// Función para recopilar los datos (banderasURL, zonasHorarias, subregiones) de los países.
+// --------------------- Seed de países ------------------------------ //
+
+// Recopilar datos de los paises para formulario
 export function recopilarDatosPaises(paises) {
 	const banderasURL = [];
 	let zonasHorarias = [];
 	const subregiones = [];
 
-	// Recorre cada país
 	paises.forEach((pais) => {
-		// Obtenemos la URL del PNG de la bandera y la agregamos al array de banderasURL
 		banderasURL.push(pais.flags.png);
-		// Obtenemos las zonas horarias del país y las agregamos al array de zonasHorarias, asegurando que no se repitan
 		const zonasHorariasPais = pais.timezones;
 		for (let i = 0; i < zonasHorariasPais.length; i++) {
 			// Si la zona horaria no está en el array, la agrega
@@ -18,7 +17,6 @@ export function recopilarDatosPaises(paises) {
 				zonasHorarias.push(zonasHorariasPais[i]);
 			}
 		}
-		// Obtenemos la subregión del país y la agregamos al array de subregiones, asegurando que no se repitan
 		const subregionPais = pais.subregion;
 		if (!subregiones.includes(subregionPais)) {
 			subregiones.push(subregionPais);
@@ -31,18 +29,17 @@ export function recopilarDatosPaises(paises) {
 }
 
 function ordenarZonasHorarias(zonasHorarias) {
-	// Compara dos zonas horarias y las ordena alfabéticamente.
 	zonasHorarias.sort((a, b) => a.localeCompare(b));
 	return zonasHorarias;
 }
 
+// Upsert del documento con los datos recopilados
 export async function uspertDocumentoFormulario(paises) {
 	const documento = recopilarDatosPaises(paises);
 	return await Countries.upsertDocumento(documento);
 }
 
 function filtrarPaisesHispanos(paises) {
-	// Filtrar los paises de América que tengan español cómo idioma
 	return paises.filter((pais) => pais.languages.spa);
 }
 
@@ -65,9 +62,9 @@ Se usa '?' para evitar el error de que el país no tenga el campo, si no lo tien
 le asigna null.
 ****************************************************************** */
 
+// Formatear los pases al esquema y filtra los campos necesarios
 function transformarPaisesAlFormatoModelo(paises) {
 	return paises.map((pais) => {
-		// Obtener la primera moneda del país
 		const primeraMoneda = Object.values(pais.currencies)[0] ?? null;
 		const moneda = primeraMoneda
 			? {
@@ -75,7 +72,6 @@ function transformarPaisesAlFormatoModelo(paises) {
 					nombre: primeraMoneda.name ?? 'N/A',
 				}
 			: null;
-		// Obtener el valor y el año del índice Gini.
 		const gini = pais.gini
 			? {
 					valor: Object.values(pais?.gini)[0],
@@ -106,24 +102,35 @@ function transformarPaisesAlFormatoModelo(paises) {
 	});
 }
 
+// Upsert paises hispanos
 export async function upsertPaisesHispanos(paises) {
 	const paisesHispanos = filtrarPaisesHispanos(paises);
 	const paisesFormateados = transformarPaisesAlFormatoModelo(paisesHispanos);
 	return await Countries.uspertPaises(paisesFormateados);
 }
 
-// Servicio solo para llamar el método del repositorio, que obtiene todos los países
+// ------------------------------------------------------------------- //
+
 export async function obtenerTodosLosPaises() {
 	return await Countries.obtenerPaises();
 }
 
-// Servicio que solo llama al método para obtener el documento con los datos para los formularios
 export async function obtenerDocumentoDatosFormulario() {
 	return await Countries.obtenerDatosFormulario();
 }
 
-// Servicio que solo llama al método para obtener el documento con los datos para los formularios
 export async function buscarPorId(id) {
 	return await Countries.buscar(id);
 }
 
+export async function crearPais(pais) {
+	return await Countries.crear(pais);
+}
+
+export async function actualizarPais(id, paisActualizado) {
+	return await Countries.actualizar(id, paisActualizado);
+}
+
+export async function eliminarPais(id) {
+	return await Countries.eliminar(id);
+}
