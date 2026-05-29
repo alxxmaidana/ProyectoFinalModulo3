@@ -57,7 +57,6 @@ const PaisSchema = new mongoose.Schema(
 		fifa: {
 			type: String,
 			trim: true,
-			required: true,
 			minlength: 3,
 			maxlength: 3,
 		},
