@@ -1,6 +1,5 @@
 import { body } from 'express-validator';
 
-// Midleware de validación para los campos del formulario de agregar y editar países
 const validarPaises = [
 	// Nombre común
 	body('nombre.comun')
@@ -18,6 +17,7 @@ const validarPaises = [
 		// Que tenga un máximo de 90 caractéres
 		.isLength({ max: 90 })
 		.withMessage('El nombre común no puede superar los 90 caractéres')
+		// Validar que no contenga número ni caractéres especiales
 		.custom((nombreComun) => {
 			const regex = /^[a-zA-ZÀ-ÿ\s,']+$/;
 			if (!regex.test(nombreComun)) {
@@ -48,30 +48,23 @@ const validarPaises = [
 			}
 			return true;
 		}),
-	// Validar URL de la bandera
 	body('bandera').trim().notEmpty().withMessage('Elija la bandera del país'),
 
-	////////////
-	// Capital
-	////////////
-	body('capital.*') // Eliminar espacios en blanco de cada capital
-		.trim(),
+	body('capital.*').trim(),
 	body('capital')
-		// Que el array capital no esté vacío
 		.isArray({ min: 1 })
 		.withMessage('Ingrese la capital del país')
 		.bail()
-		// Cada capitlal tenga alménos 3 caracteres
 		.custom((capitales) => {
-			// Validar que tenga almenos 3 caractéres
+			// validar que cada capital tenga elmenos 3 caracteres
 			if (capitales.some((capital) => capital.length < 3)) {
 				throw new Error('Cada capital debe tener almenos 3 caractéres');
 			}
-			// Que tenga cómo máximo 90 caractéres
+			// que cada capital tenga como máximo 90 caractéres
 			if (capitales.some((capital) => capital.length > 90)) {
 				throw new Error('Cada capital no puede superar los 90 caractéres');
 			}
-			// No contenga números ni caractéres especiales
+			// No contengan números ni caractéres especiales
 			const regex = /^[a-zA-ZÀ-ÿ\s,']+$/;
 			if (capitales.some((capital) => !regex.test(capital))) {
 				throw new Error(
@@ -79,48 +72,35 @@ const validarPaises = [
 				);
 			}
 			return true;
-			// Con some validamos que alménos un elemento del array no cumpla la condicion
-		}),
-	/////////////////////
-	// Subregión
-	//////////////////
-	body('subregion')
-		.trim()
-		// Subregión obligatória
-		.notEmpty()
-		.withMessage('Elija la subregión del país'),
-	////////////////////////
-	// Fronteras
-	////////////////////////
-	body('frontereas.*').trim(),
-	// Validar que todos los países sean solo letras
-	body('fronteras')
-		// Si el campo está vacío no valida
-		.custom((fronteras) => {
-			if (fronteras.length > 0) {
-				// Que solo contenga letras
-				if (fronteras.some((pais) => !pais.match(/^[A-Za-z\s]+$/))) {
-					throw new Error('Cada país debe contener sólo letras');
-				}
-				// Que esté en mayùsculas
-				if (fronteras.some((frontera) => frontera !== frontera.toUpperCase())) {
-					throw new Error(
-						'El código de cada frontera deber estar en mayúsculas',
-					);
-				}
-				// Que tenga exactamente 3 carácteres
-				if (fronteras.some((pais) => pais.length !== 3)) {
-					throw new Error(
-						'El código de cada país debe tener exactamente 3 caracteres',
-					);
-				}
-			}
-			return true;
 		}),
 
-	//////////////////////
-	// Área
-	/////////////////////
+	body('subregion')
+		.trim()
+		.notEmpty()
+		.withMessage('Elija la subregión del país'),
+
+	body('frontereas.*').trim(),
+	body('fronteras').custom((fronteras) => {
+		// Fronteras es opcional, si no se ingreso ninguna, se salta la validación
+		if (fronteras.length > 0) {
+			// Que solo contengan letras
+			if (fronteras.some((pais) => !pais.match(/^[A-Za-z\s]+$/))) {
+				throw new Error('Cada país debe contener sólo letras');
+			}
+			// Que estén en mayúsculas
+			if (fronteras.some((frontera) => frontera !== frontera.toUpperCase())) {
+				throw new Error('El código de cada frontera deber estar en mayúsculas');
+			}
+			// Que tengan exactamente 3 carácteres
+			if (fronteras.some((pais) => pais.length !== 3)) {
+				throw new Error(
+					'El código de cada país debe tener exactamente 3 caracteres',
+				);
+			}
+		}
+		return true;
+	}),
+
 	body('area')
 		.trim()
 		.notEmpty()
@@ -130,7 +110,7 @@ const validarPaises = [
 		.isNumeric()
 		.withMessage('El área del país debe ser un número')
 		.bail()
-		//  Que no sea negativo
+		// Que no sea negativo
 		.custom((value) => {
 			if (Number(value) <= 0) {
 				throw new Error('El area debe ser un número mayor 0 (cero)');
@@ -138,9 +118,6 @@ const validarPaises = [
 			return true;
 		}),
 
-	////////////////////
-	// Población
-	////////////////////
 	body('poblacion')
 		.trim()
 		.notEmpty()
@@ -153,28 +130,19 @@ const validarPaises = [
 			'La cantidad de habitantes debe ser un número entero positivo (mayor a cero)',
 		),
 
-	///////////////////////
-	// Zonas horárias
-	///////////////////////
 	body('zonasHorarias.*').trim(),
 	body('zonasHorarias')
-		// Verificar que tenga almenos una zona horaria
 		.isArray({ min: 1 })
 		.withMessage('Elija almenos una zona horária'),
 
-	//////////////////////
-	// Monedas
-	//////////////////////
 	body('moneda.simbolo')
 		.trim()
 		.notEmpty()
 		.withMessage('El símbolo de la moneda es requerido')
 		.bail()
-		// Que sea un string
 		.isString()
 		.withMessage('El símbolo de la moneda debe ser un texto')
 		.bail()
-		// Que tenga cómo máximo 5 carácteres
 		.isLength({ max: 5 })
 		.withMessage('El símbolo no puede superar los 5 caracteres'),
 	body('moneda.nombre')
@@ -182,44 +150,82 @@ const validarPaises = [
 		.notEmpty()
 		.withMessage('El nombre de la moneda es requerido')
 		.bail()
-		// Que se texto
+		// Que el nombre de la moneda no contenga números ni caracteres especiales
 		.custom((nombreMoneda) => {
 			const regex = /^[a-zA-ZÀ-ÿ\s,']+$/;
 			if (!regex.test(nombreMoneda)) {
 				throw new Error(
-					'El nombre de la moneda no puede contener número y caractéres especiales',
+					'El nombre de la moneda no puede contener números y caractéres especiales',
 				);
 			}
 			return true;
 		})
 		.bail()
-		// Que tenga cómo minimo 3 caracteres y máximo 40
 		.isLength({ min: 3, max: 40 })
 		.withMessage('El nombre debe tener entre 3 y 40 caracteres'),
 
-	// body('latitudLongitud')
-	//     .isArray({ min: 1 }).withMessage('Ingreser por favor la Latitud y Longitud')
-	//     .bail()
-	//     .custom((latitudLongitud) => {
-	//         const latitud = latitudLongitud[0];
-	//         const longitud = latitudLongitud[1];
-	//         console.log(latitud, longitud);
-	//         const envioLatitud = if (latitud)
-	//     })
+	body('independiente')
+		.notEmpty()
+		.withMessage('Indique si es independiente o no'),
 
-	//     ,
+	body('miemboONU')
+		.notEmpty()
+		.withMessage('Indique si es o no miembro de la ONU'),
 
-	//////////////////////////////
-	// Indice de Gini
-	////////////////////////////
+	body('salidaAlMar')
+		.notEmpty()
+		.withMessage('Inique si el país tiene o no salida al Mar'),
+
+	body('fifa')
+		.optional()
+		.trim()
+		.custom((fifa) => {
+			// Validar que el códifo fifa no tenga, número ni caractéres especiales
+			const regex = /^[a-zA-ZÀ-ÿ\s,']+$/;
+			if (!regex.test(fifa)) {
+				throw new Error(
+					'El código FIFA no puede contener números ni caractéres especiales',
+				);
+			}
+			return true;
+		})
+		.bail()
+		.custom((fifa) => {
+			if (fifa !== fifa.toUpperCase()) {
+				throw new Error('El código FIFA  deber estár en mayúsculas');
+			}
+			return true;
+		})
+		.bail()
+		.custom((fifa) => {
+			if (fifa.length !== 3) {
+				throw new Error('El código FIFA debe tener exáctamente 3 caracteres');
+			}
+			return true;
+		}),
+
+	body('coordenadas.latitud')
+		.trim()
+		.notEmpty()
+		.withMessage('Ingrese la latitud')
+		.bail()
+		.isFloat({ min: -90, max: 90 })
+		.withMessage('La latitud debe ser un número entr -90 y 90'),
+	body('coordenadas.longitud')
+		.trim()
+		.notEmpty()
+		.withMessage('Ingrese la longitud')
+		.bail()
+		.isFloat({ min: -180, max: 180 })
+		.withMessage('La longitud debe ser un número entre -180 y 180'),
+
 	body('indiceGini').custom((indiceGini) => {
-		// Si no existe el objeto completo, no valida nada
+		// Si no se manda el objeto, no se valida
 		if (!indiceGini) return true;
 		const { valor, anio } = indiceGini;
-		// Si se envía uno solo, exigir ambos
 		const envioValor = valor !== undefined && valor !== '';
 		const envioAnio = anio !== undefined && anio !== '';
-
+		// Si se envía uno solo, exigir ambos
 		if (envioValor || envioAnio) {
 			if (!envioValor || !envioAnio) {
 				throw new Error(
@@ -229,15 +235,12 @@ const validarPaises = [
 		}
 		return true;
 	}),
-	// Valor índice Gini
 	body('indiceGini.valor')
 		// Si el valor es falsy (null, undefined, "") no se valida, pero si se envía algo que no es falsy se valida
 		.optional({ values: 'falsy' })
 		// Es un número flotante entre 0 y 100
 		.isFloat({ min: 0, max: 100 })
 		.withMessage('El índice de Gini debe ser un número entre 0 y 100'),
-
-	// Año medición
 	body('indiceGini.anio')
 		// Si el año es falsy (null, undefined, "") no se valida, pero si se envía algo que no es falsy se valida
 		.optional({ values: 'falsy' })
