@@ -62,7 +62,7 @@ const PaisSchema = new mongoose.Schema(
 		},
 		coordenadas: {
 			latitud: { type: Number, min: -90, max: 90, required: true },
-			longitud: { type: Number, min: -108, max: 180, required: true },
+			longitud: { type: Number, min: -180, max: 180, required: true },
 		},
 		// Algunos paises no tienen dato
 		indiceGini: {
