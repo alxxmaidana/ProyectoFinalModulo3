@@ -7,7 +7,6 @@ import {
 	obtenerTodosLosPaises,
 	upsertPaisesHispanos,
 	uspertDocumentoFormulario,
-	
 } from '../services/countriesService.js';
 
 // Controlador del seed de países
@@ -73,7 +72,7 @@ export async function getPaisPorId(req, res) {
 	try {
 		const { id } = req.params;
 		const pais = await buscarPorId(id);
-		if (pais.length < 1) {
+		if (!pais) {
 			return res.status(404).json({
 				mensaje: `No se encontro el País con el id: ${id}`,
 			});
@@ -103,7 +102,7 @@ export async function postPais(req, res) {
 	}
 }
 
-// Controller ruta para actualizar/editar país 
+// Controller ruta para actualizar/editar país
 export async function putPais(req, res) {
 	try {
 		const id = req.params.id;
@@ -119,7 +118,7 @@ export async function putPais(req, res) {
 	}
 }
 
-// Controller de ruta para eliminar un país por su id 
+// Controller de ruta para eliminar un país por su id
 export async function deletePais(req, res) {
 	try {
 		const id = req.params.id;
