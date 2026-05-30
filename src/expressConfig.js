@@ -13,13 +13,13 @@ const port = process.env.PORT || 3000;
 // Configurar motor de vistas
 app.set('view engine', 'ejs');
 app.set('views', path.resolve('./views'));
-app.set('layout', './views/layouts/layout');
+app.set('layout', './views/layout');
 
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-app.use(express.static(path.resolve('./views/public'))); // Servir cualquier archivo estático dentro de public
+app.use(express.static(path.resolve('./public'))); // Servir cualquier archivo estático dentro de public
 app.use(expressLayouts);
 
 // Redireccionar a '/paises' que es donde tengo las rutas
