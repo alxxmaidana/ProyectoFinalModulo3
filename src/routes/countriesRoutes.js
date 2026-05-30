@@ -22,9 +22,19 @@ countriesRouter.get('/formData', getDatosFormulario);
 // Buscar país por id
 countriesRouter.get('/:id/buscar', getPaisPorId);
 
-countriesRouter.post('/crear', validarPaises, manejarErroresValidacion, postPais);
+countriesRouter.post(
+	'/crear',
+	validarPaises,
+	manejarErroresValidacion,
+	postPais,
+);
 
-countriesRouter.put('/:id/editar', validarPaises, manejarErroresValidacion, putPais);
+countriesRouter.put(
+	'/:id/editar',
+	validarPaises,
+	manejarErroresValidacion,
+	putPais,
+);
 
 countriesRouter.delete('/:id/eliminar', deletePais);
 
