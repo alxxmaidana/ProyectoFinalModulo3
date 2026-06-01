@@ -13,7 +13,7 @@ const port = process.env.PORT || 3000;
 // Configurar motor de vistas
 app.set('view engine', 'ejs');
 app.set('views', path.resolve('./views'));
-app.set('layout', './views/layout');
+app.set('layout', 'layout');
 
 // Middlewares
 app.use(express.json());
