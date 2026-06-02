@@ -22,13 +22,13 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.resolve('./public'))); // Servir cualquier archivo estático dentro de public
 app.use(expressLayouts);
 
-// Redireccionar a '/paises' que es donde tengo las rutas
+// Redireccionar a '/GeoPanel' que es donde estan definidas las rutas
 app.get('/', (_req, res) => {
-	res.redirect('/paises');
+	res.redirect('/GeoPanel');
 });
 
-// Montar enrutador
-app.use('/paises', countriesRouter);
+// Montar el  enrutador utilizando en el prefijo en la variable global appPrefix
+app.use('/GeoPanel', countriesRouter);
 
 // Mensaje para rutas no encontrada para el codigo de estado 404
 app.use((_req, res) => {
