@@ -25,20 +25,17 @@ export async function sembrarPaises() {
 	}
 }
 
-// --------------------- Controllers crud simple (prueba) --------------//
-
 // Controlador para la ruta de obtener todos los países de la colección
-export async function getTodosLosPaises(_req, res) {
+export async function getDashboard(req, res) {
 	try {
-		const paises = await obtenerTodosLosPaises();
-		if (paises.length === 0) {
-			return res.status(404).json({
-				mensaje: 'No se encontron ningún país en la colección',
-			});
-		}
-		console.log('Cantidad de paisese obtenidos:', paises.length);
-		// Monstrar los paises obtenidos
-		res.status(200).json(paises);
+		const paisesObtenidos = await obtenerTodosLosPaises();
+		// dashboardResData.paises = paisesObtenidos;
+		res.status(200).render('dashboard', {
+			title: 'Dashobard | GeoPanel',
+			paises: paisesObtenidos,
+			mensaje: req.query.mensaje || null,
+			tipoMensaje: req.query.tipoMensaje || null,
+		});
 	} catch (err) {
 		res.status(500).json({
 			mensaje: 'Error al obtener los paises',
@@ -93,7 +90,11 @@ export async function postPais(req, res) {
 		console.log('Pais obtenido del body: ', pais);
 		await crearPais(pais);
 		console.log('Pais Creado exitosamente');
-		res.status(200).json(pais);
+		res
+			.status(204)
+			.redirect(
+				'/GeoPanel/?mensaje=País agregado correctamente&tipoMensaje=exito',
+			);
 	} catch (err) {
 		res.status(500).json({
 			mensaje: 'Error al crear el nuevo país',

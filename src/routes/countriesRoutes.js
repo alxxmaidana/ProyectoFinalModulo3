@@ -4,9 +4,9 @@ const countriesRouter = Router();
 
 import {
 	deletePais,
+	getDashboard,
 	getDatosFormulario,
 	getPaisPorId,
-	getTodosLosPaises,
 	postPais,
 	putPais,
 } from '../controllers/countriesController.js';
@@ -14,7 +14,8 @@ import {
 import validarPaises from '../middlewares/validations/countryRulesValidations.js';
 import manejarErroresValidacion from '../middlewares/validations/handleValidationsErrors.js';
 
-countriesRouter.get('/', getTodosLosPaises);
+// Renderizar el Dashobard con la tabla de países
+countriesRouter.get('/', getDashboard);
 
 // Ruta para obtener el documento pora formulario
 countriesRouter.get('/formData', getDatosFormulario);
