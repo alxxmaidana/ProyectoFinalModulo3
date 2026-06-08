@@ -8,19 +8,19 @@
     </div>
 </header>
 <!-- Mensaje de éxito/error -->
-<% if (mensaje) { %>
-  <div class="alert alert--<%= tipoMensaje %>">
+<% if (mensaje.msg && mensaje.tipo) { %>
+  <div class="alert alert--<%= mensaje.tipo %>">
     <span class="alert-icon"><%= // tipoMensaje === 'exito' ? '✓' : 'ℹ' %>
-        <%= mensaje %>
+        <%= mensaje.msg %>
         <br>
-        <%= tipoMensaje %>
+        <%= mensaje.tipo %>
     </span>
     <button type="button" class="alert-close">×</button>
   </div>
 <% } %> 
 
 <!-- Mensaje por si la colección está vacía -->
-<% if (paises.length === 0) { %>
+<% if (respuesta.paises.length === 0) { %>
     <div>
         <div>
             <h2>Su colección de Países Hispano de América se encuentra vacía</h2>
@@ -44,7 +44,7 @@
             <th>Creador</th>
         </thead> 
         <tbody>
-            <% paises.forEach((pais) => { %>
+            <% respuesta.paises.forEach((pais) => { %>
                 <tr data-id="<%= pais._id %>">
                     <!-- BANDERA -->
                     <td>
@@ -105,7 +105,7 @@
         </tbody>
         <!-- Totales de població y area y promedio de gini (solo para los paises que tienen este dato) -->
         <tfoot>
-                <tr>Área total (km<sup>2</sup>): <%= parseFloat(totalArea).toLocaleString('es-AR') %> - Población total: <%= totalPoblacion.toLocaleString('es-AR') %> - Promedio Gini: <%= promedioGini.toLocaleString('es-AR')%></tr>
+                <tr>Área total (km<sup>2</sup>): <%= parseFloat(respuesta.totalArea).toLocaleString('es-AR') %> - Población total: <%= respuesta.totalPoblacion.toLocaleString('es-AR') %> - Promedio Gini: <%= respuesta.promedioGini.toLocaleString('es-AR')%></tr>
         </tfoot>
     </table>
 <% } %>

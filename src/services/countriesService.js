@@ -167,6 +167,5 @@ function calcularPromedioGini(paises) {
 		}
 		return acc;
 	}, 0);
-	const promedio = acumulado / contador;
-	return promedio;
+	return acumulado / contador;
 }

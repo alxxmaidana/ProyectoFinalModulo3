@@ -9,6 +9,8 @@ import {
 	uspertDocumentoFormulario,
 } from '../services/countriesService.js';
 
+
+
 // Controlador del seed de países
 export async function sembrarPaises() {
 	try {
@@ -25,19 +27,43 @@ export async function sembrarPaises() {
 	}
 }
 
-// Controlador para la ruta de obtener todos los países de la colección
+// Response renderizar dashboard
+	// 1. dasbhoard
+	// 2. title
+	// 3. paises
+	// 4. total area
+	// 5. total poblacion
+	// 6. promiedio gini
+	// 7. mensaje 
+	// 8. tipo mensaje
+
+// Response renderizar formulario crear
+	// 1. formulario
+	// 2. title
+	// 3. pais = null -->> un objeto país nulo
+	// 4. errores
+		// 1. campo donde falló
+		// 2. mensaje de corrección
+
+// Response renderizar formulario editar
+	// 1. formulario
+	// 2. title 
+	// 3. pais ->> pais obtenido por su id
+	// 4. errores 
+		// 1. campo donde falló
+		// 2. mensaje de corrección
+
+
 export async function getDashboard(req, res) {
 	try {
-		const obtenido = await obtenerTodosLosPaises();
-		const  { paises, totalArea, totalPoblacion, promedioGini } = obtenido;
+		const respuesta = await obtenerTodosLosPaises();
 		res.status(200).render('dashboard', {
 			title: 'Dashobard | GeoPanel',
-			paises,
-			totalArea: totalArea.toFixed(1),
-			totalPoblacion,
-			promedioGini: promedioGini.toFixed(1),
-			mensaje: req.query.mensaje || null,
-			tipoMensaje: req.query.tipoMensaje || null,
+			respuesta,
+			mensaje: {
+				msg: req.query.msg || null,
+				tipo: req.query.tipo || null
+			}
 		});
 	} catch (err) {
 		res.status(500).json({
@@ -96,7 +122,7 @@ export async function postPais(req, res) {
 		res
 			.status(204)
 			.redirect(
-				'/GeoPanel/?mensaje=País agregado correctamente&tipoMensaje=exito',
+				'/GeoPanel/?msg=País agregado correctamente&tipo=exito',
 			);
 	} catch (err) {
 		res.status(500).json({
