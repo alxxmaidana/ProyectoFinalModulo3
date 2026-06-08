@@ -115,9 +115,13 @@ export async function upsertPaisesHispanos(paises) {
 
 // ------------------------------------------------------------------- //
 
-
 export async function obtenerTodosLosPaises() {
-	return await Countries.obtenerPaises();
+	const paisesObtenidos = await Countries.obtenerPaises();
+	const totalArea = calcularTotales(paisesObtenidos, 'area');
+	const totalPoblacion = calcularTotales(paisesObtenidos, 'poblacion');
+	const promedioGini = calcularPromedioGini(paisesObtenidos);
+	const paises = ordenarPaisesFechaCreacion(paisesObtenidos);
+	return { paises, totalArea, totalPoblacion, promedioGini };
 }
 
 export async function obtenerDocumentoDatosFormulario() {
@@ -138,4 +142,31 @@ export async function actualizarPais(id, paisActualizado) {
 
 export async function eliminarPais(id) {
 	return await Countries.eliminar(id);
+}
+
+function ordenarPaisesFechaCreacion(paisesObtenidos) {
+	return paisesObtenidos.sort((a, b) => b.createdAt - a.createdAt);
+}
+
+function calcularTotales(paises, clave) {
+	const total = paises.reduce((acc, pais) => {
+		if (pais[clave]) {
+			acc = acc + pais[clave];
+		}
+		return acc;
+	}, 0);
+	return total;
+}
+
+function calcularPromedioGini(paises) {
+	let contador = 0;
+	const acumulado = paises.reduce((acc, pais) => {
+		if (pais.indiceGini.valor !== undefined) {
+			acc = acc + pais.indiceGini.valor;
+			contador++;
+		}
+		return acc;
+	}, 0);
+	const promedio = acumulado / contador;
+	return promedio;
 }

@@ -103,18 +103,22 @@
                 </tr>
             <% }); %>
         </tbody>
+        <!-- Totales de població y area y promedio de gini (solo para los paises que tienen este dato) -->
         <tfoot>
-
+                <tr>Área total (km<sup>2</sup>): <%= parseFloat(totalArea).toLocaleString('es-AR') %> - Población total: <%= totalPoblacion.toLocaleString('es-AR') %> - Promedio Gini: <%= promedioGini.toLocaleString('es-AR')%></tr>
         </tfoot>
     </table>
 <% } %>
 
+<!-- <script type="module" src="../public/js/limpiarUlr.js"></script> -->
 <script>
     window.addEventListener('load', () => {
-        const url = new URL(window.location.href);
-        if (url.search.length > 0) {
-            url.search = '';
-            window.history.replaceState({}, document.title, url.pathname);
-        }
-    });
+	const url = new URL(window.location.href);
+	// Si la URL tiene la cadena de consulta la limpia
+	if (url.search.length > 0) {
+		url.search = '';
+		window.history.replaceState({}, document.title, url.pathname);
+	}
+});
+
 </script>

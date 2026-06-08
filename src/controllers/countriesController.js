@@ -28,11 +28,14 @@ export async function sembrarPaises() {
 // Controlador para la ruta de obtener todos los países de la colección
 export async function getDashboard(req, res) {
 	try {
-		const paisesObtenidos = await obtenerTodosLosPaises();
-		// dashboardResData.paises = paisesObtenidos;
+		const obtenido = await obtenerTodosLosPaises();
+		const  { paises, totalArea, totalPoblacion, promedioGini } = obtenido;
 		res.status(200).render('dashboard', {
 			title: 'Dashobard | GeoPanel',
-			paises: paisesObtenidos,
+			paises,
+			totalArea: totalArea.toFixed(1),
+			totalPoblacion,
+			promedioGini: promedioGini.toFixed(1),
 			mensaje: req.query.mensaje || null,
 			tipoMensaje: req.query.tipoMensaje || null,
 		});
