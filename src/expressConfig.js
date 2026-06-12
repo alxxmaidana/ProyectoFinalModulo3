@@ -19,7 +19,7 @@ app.set('layout', 'layout');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-app.use(express.static(path.resolve('./public'))); // Servir cualquier archivo estático dentro de public
+app.use(express.static(path.resolve('./public')));
 app.use(expressLayouts);
 
 // Redireccionar a '/GeoPanel' que es donde estan definidas las rutas
