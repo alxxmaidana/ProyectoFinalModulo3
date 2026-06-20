@@ -1,12 +1,13 @@
-<header class="page-header">
-    <div>
+<header class="w-full mb-8">
+    <div class="flex justify-between items-center">
         <div>
-            <h1>Tabla de Países Hispanohablantes de América</h1>
-            <p>Administra los países hispanos de América. Agrega, edita y elimina paises de forma sencilla.</p>
+            <h1 class="text-2xl ">Tabla de Países Hispanohablantes de América</h1>
+            <p class="text-lg">Administra los países hispanos de América. Agrega, edita y elimina paises de forma sencilla.</p>
         </div>
-        <a href="/GeoPanel/crear">+ Crear País</a>
+        <a class="" href="/GeoPanel/crear">+ Crear País</a>
     </div>
 </header>
+
 <!-- Mensaje de éxito/error -->
 <% if (mensaje.msg && mensaje.tipo) { %>
   <div class="alert alert--<%= mensaje.tipo %>">
@@ -21,16 +22,16 @@
 
 <!-- Mensaje por si la colección está vacía -->
 <% if (respuesta.paises.length === 0) { %>
-    <div>
-        <div>
+    <div class="my-8 w-[40%] mx-auto border text-lg p-4">
+        <div class="text-center">
             <h2>Su colección de Países Hispano de América se encuentra vacía</h2>
-            <p>Empieze agregando su primer País</p>
+            <p>Empiece agregando su primer País</p>
         </div>
         <a href="/GeoPanel/crear">+ Crear País</a>
     </div>
 <% } else { %>
     <!-- Si la colección no está vacía iterar los países y renderizar cada uno en una fila de la tabla -->
-    <table>
+    <table class="w-full">
         <thead>
             <!-- Bandera -->
             <th></th> 
@@ -48,7 +49,7 @@
                 <tr data-id="<%= pais._id %>">
                     <!-- BANDERA -->
                     <td>
-                        <img src="<%= pais.bandera %>" alt="Bandera de <%= pais.nombre.comun %>">
+                        <img src="<%= pais.bandera %>" width="80px" alt="Bandera de <%= pais.nombre.comun %>">
                     </td>
                     <!-- NOMBRE -->
                     <td>
@@ -105,7 +106,7 @@
         </tbody>
         <!-- Totales de població y area y promedio de gini (solo para los paises que tienen este dato) -->
         <tfoot>
-                <tr>Área total (km<sup>2</sup>): <%= parseFloat(respuesta.totalArea).toLocaleString('es-AR') %> - Población total: <%= respuesta.totalPoblacion.toLocaleString('es-AR') %> - Promedio Gini: <%= respuesta.promedioGini.toLocaleString('es-AR')%></tr>
+                <tr><td>Área total (km<sup>2</sup>): <%= parseFloat(respuesta.totalArea).toLocaleString('es-AR') %> - Población total: <%= respuesta.totalPoblacion.toLocaleString('es-AR') %> - Promedio Gini: <%= respuesta.promedioGini.toLocaleString('es-AR')%></td></tr>
         </tfoot>
     </table>
 <% } %>

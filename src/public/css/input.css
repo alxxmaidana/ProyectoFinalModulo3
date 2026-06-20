@@ -1,1 +1,63 @@
 @import "tailwindcss";
+
+/* --- Variables -------------------------------------------- */
+:root {
+  --bg:          #f9f9f8;
+  --surface:     #ffffff;
+  --surface-2:   #f4f4f3;
+  --border:      #e5e5e3;
+  --border-soft: #ebebea;
+
+  --text-primary:   #1a1a18;
+  --text-secondary: #6b6b68;
+  --text-muted:     #a0a09d;
+
+  --accent:       #c96a2a;
+  --accent-light: #f5ede5;
+  --accent-hover: #a8561f;
+
+  --danger:       #c0392b;
+  --danger-light: #fdf2f1;
+  --success:      #2d7a4f;
+  --success-light:#f0f7f3;
+  --info:         #2563a8;
+  --info-light:   #eff5fd;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+  --shadow-md: 0 2px 8px rgba(0,0,0,.07);
+  --shadow-lg: 0 4px 24px rgba(0,0,0,.09);
+
+  --main-font: 'Nunito Sans';
+  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Geist Mono', 'Courier New', monospace;
+
+  --nav-h: 56px;
+  --content-max: 1400px;
+  --transition: 150ms ease;
+}
+
+body {
+    font-family: var(--main-font);
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+    -webkit-font-smoothing: antialiased;
+}
+ 
+.main-content {
+    width: 70%;
+    margin: 0 auto;
+}
+
+table tbody tr {
+    padding: 1rem 0;
+}
