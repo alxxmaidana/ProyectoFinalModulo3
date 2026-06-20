@@ -30,10 +30,9 @@
         <a href="/GeoPanel/crear">+ Crear País</a>
     </div>
 <% } else { %>
-    <!-- Si la colección no está vacía iterar los países y renderizar cada uno en una fila de la tabla -->
-    <table class="w-full">
+    
+    <table class="w-full border border-(--border)">
         <thead>
-            <!-- Bandera -->
             <th></th> 
             <th>Nombre</th>
             <th>Capital</th>
@@ -46,80 +45,15 @@
         </thead> 
         <tbody>
             <% respuesta.paises.forEach((pais) => { %>
-                <tr data-id="<%= pais._id %>">
-                    <!-- BANDERA -->
-                    <td>
-                        <img src="<%= pais.bandera %>" width="80px" alt="Bandera de <%= pais.nombre.comun %>">
-                    </td>
-                    <!-- NOMBRE -->
-                    <td>
-                        <span><%= pais.nombre.comun %></span>
-                        <span><%= pais.nombre.oficial %></span>
-                    </td>
-                    <!-- CAPITAL -->
-                    <td>
-                        <%= pais.capital.join(', ') %>
-                    </td>
-                    <!-- FRONTERAS -->
-                    <td>
-                        <% if (pais.fronteras && pais.fronteras.length > 0) { %>
-                            <div>
-                                <% pais.fronteras.forEach((frontera) => { %>
-                                    <span><%= frontera %></span>
-                                <% }) %>
-                            </div>
-                        <% } else { %>
-                            <span>Sin Fronteras</span>
-                        <% } %>
-                    </td>
-                    <!-- AREA -->
-                    <td>
-                        <%= pais.area.toLocaleString('es-AR') %>
-                    </td>
-                    <!-- POBLACIÓN -->
-                    <td>
-                        <%= pais.poblacion.toLocaleString('es-AR') %>
-                    </td>
-                    <!-- ZONAS HORARIAS -->
-                    <td>
-                        <div>
-                            <% pais.zonasHorarias.forEach((zonaHoraria) => { %>
-                                <span><%= zonaHoraria %></span>
-                            <% }) %>
-                        </div>
-                    </td>
-                    <!-- INDICE GINI -->
-                    <td>
-                        <% if (pais.indiceGini && pais.indiceGini.valor) { %>
-                            <span><%= pais.indiceGini.valor.toFixed(1) %></span>
-                            <span><%= pais.indiceGini.anio %></span>
-                        <% } else { %>
-                            <span>-</span>
-                        <% } %>
-                    </td>
-                    <!-- CREADOR -->
-                    <td>
-                        <%= pais.creador %>
-                    </td>
-                </tr>
+                <%- include('partials/tableRow', { pais }) %>
             <% }); %>
         </tbody>
         <!-- Totales de població y area y promedio de gini (solo para los paises que tienen este dato) -->
         <tfoot>
-                <tr><td>Área total (km<sup>2</sup>): <%= parseFloat(respuesta.totalArea).toLocaleString('es-AR') %> - Población total: <%= respuesta.totalPoblacion.toLocaleString('es-AR') %> - Promedio Gini: <%= respuesta.promedioGini.toLocaleString('es-AR')%></td></tr>
+            <tr>
+                <td>Area Total(Km<sup>2</sup>): <%= respuesta.totalArea.toLocaleString('es-AR') %></td>
+                <td>Población Total: <%= respuesta.totalPoblacion.toLocaleString('es-AR') %> Habitantes</td>
+            </tr>
         </tfoot>
     </table>
 <% } %>
-
-<!-- <script type="module" src="../public/js/limpiarUlr.js"></script> -->
-<script>
-    window.addEventListener('load', () => {
-	const url = new URL(window.location.href);
-	// Si la URL tiene la cadena de consulta la limpia
-	if (url.search.length > 0) {
-		url.search = '';
-		window.history.replaceState({}, document.title, url.pathname);
-	}
-});
-
-</script>

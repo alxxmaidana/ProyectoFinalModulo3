@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* --- Variables -------------------------------------------- */
 :root {
   --bg:          #f9f9f8;
   --surface:     #ffffff;
@@ -58,6 +57,50 @@ body {
     margin: 0 auto;
 }
 
-table tbody tr {
-    padding: 1rem 0;
+table thead th {
+  text-align: left;
+  color: var(--text-secondary);
+  padding: .875rem .975rem;
+  border-bottom: 1px solid var(--border-soft)
+}
+
+table tbody tr.rowmain td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+}
+
+.detail-item label {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 3px;
+}
+
+.detail-item span {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.detail-inner {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0 20px;
+  background: #f5f4ee;
+}
+
+.detail-inner.open {
+  max-height: 300px;
+  padding: 16px 20px;
+}
+
+
+.arrow-open {
+  transform: rotate(180deg);
 }

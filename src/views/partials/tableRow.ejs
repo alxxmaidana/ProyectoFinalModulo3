@@ -1,0 +1,87 @@
+<tr class="rowmain cursor-pointer transition-(--transition) hover:bg-(--surface-2)" data-id="<%= pais._id %>" data-target="det-<%= pais._id %>">
+    <td>
+        <i class="inline-block not-italic transition-(--transition)" id="arrow-<%= pais._id %>">&#9662;</i>
+    </td>
+    <td>
+        <img src="<%= pais.bandera %>" class="w-7" alt="Bandera de <%= pais.nombre.comun %>">
+    </td>
+    <td>
+        <span><%= pais.nombre.comun %></span>
+        <span><%= pais.nombre.oficial %></span>
+    </td>
+    <td>
+        <%= pais.capital.join(', ') %>
+    </td>
+    <td>
+        <% if (pais.fronteras && pais.fronteras.length > 0) { %>
+            <div>
+                <% pais.fronteras.forEach((frontera) => { %>
+                    <span><%= frontera %></span>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <span>-</span>
+        <% } %>
+    </td>
+    <td>
+        <%= pais.area.toLocaleString('es-AR') %>
+    </td>
+    <td>
+        <%= pais.poblacion.toLocaleString('es-AR') %>
+    </td>
+    <td>
+        <div>
+            <% pais.zonasHorarias.forEach((zonaHoraria) => { %>
+                <span><%= zonaHoraria %></span>
+            <% }) %>
+        </div>
+    </td>
+    <td>
+        <% if (pais.indiceGini && pais.indiceGini.valor) { %>
+            <span><%= pais.indiceGini.valor.toFixed(1) %></span>
+            <span><%= pais.indiceGini.anio %></span>
+        <% } else { %>
+            <span>-</span>
+        <% } %>
+    </td>
+    <td>
+        <%= pais.creador %>
+    </td>
+</tr>
+
+<tr class="rowdetail">
+    <td colspan="7" >
+        <div class="detail-inner" id="det-<%= pais._id %>">
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label>Subregión</label>
+                    <span><%= pais.subregion %></span>
+                </div>
+                 <div class="detail-item">
+                    <label>Moneda</label>
+                    <span><%= pais.moneda.simbolo %> - <%= pais.moneda.nombre %></span>
+                </div>
+                <div class="detail-item">
+                    <label>Es independiente:</label>
+                    <span><%= pais.independiente === true ? 'Si' : 'No' %></span>
+                </div>
+                <div class="detail-item">
+                    <label>Con salida al mar:</label>
+                    <span><%= pais.salidaAlMar === true ? 'Si' : 'No' %></span>
+                </div>
+                <div class="detail-item">
+                    <label>Miembro de la ONU:</label>
+                    <span><%= pais.miembroONU === true ? 'Si' : 'No' %></span>
+                </div>
+                <div class="detail-item">
+                    <label>FIFA</label>
+                    <span><%= pais.fifa ? pais.fifa : '-' %></span>
+                </div>
+                <div class="detail-item">
+                    <label>Coordenadas</label>
+                    <span>Latitud: <%= pais.coordenadas.latitud %> - Longitud: <%= pais.coordenadas.longitud %></span>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>
