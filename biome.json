@@ -6,8 +6,7 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"ignoreUnknown": false,
-		"ignore": ["**/*.ejs"]
+		"ignore": ["./src/views" ]
 	},
 	"formatter": {
 		"enabled": true,

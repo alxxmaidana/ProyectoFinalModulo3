@@ -54,18 +54,21 @@ export async function sembrarPaises() {
 		// 2. mensaje de corrección
 
 
-export async function getDashboard(req, res) {
+export async function getDashboard(req, res) 
+{
 	try {
-		const respuesta = await obtenerTodosLosPaises();
-		res.status(200).render('dashboard', {
-			title: 'Dashobard | GeoPanel',
-			respuesta,
-			mensaje: {
-				msg: req.query.msg || null,
-				tipo: req.query.tipo || null
-			}
-		});
-	} catch (err) {
+		const response = await obtenerTodosLosPaises();
+
+		res.locals.title = 'Dashobard | GeoPanel';
+		res.locals.respuesta = response;
+		res.locals.mensaje = {
+			msg: req.query.msg || null,
+			tipo: req.query.tipo || null
+		}
+
+		res.status(200).render('dashboard');
+	}
+	catch (err) {
 		res.status(500).json({
 			mensaje: 'Error al obtener los paises',
 			error: err.message,
@@ -73,8 +76,17 @@ export async function getDashboard(req, res) {
 	}
 }
 
+// export function getFormularioCrear(_req, res)
+// {
+// 	try {
+// 		const respuesta
+// 	} catch (err) {
+		
+// 	}
+// }
+
 // Controlador para la ruta de obtener los datos para formulario
-export async function getDatosFormulario(_req, res) {
+export async function getDatosFormulario(_req, res){
 	try {
 		const datosFormulario = await obtenerDocumentoDatosFormulario();
 		console.log('Documento con los datos para formularios', datosFormulario);
