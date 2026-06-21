@@ -10,6 +10,9 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Definir un prefijo global
+const PREFIJO  = '/GeoPanel'; 
+
 // Configurar motor de vistas
 app.set('view engine', 'ejs');
 app.set('views', path.resolve('./views'));
@@ -22,13 +25,19 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.resolve('./public')));
 app.use(expressLayouts);
 
+// Inyectar el prefijo en las plantillas 
+app.use((req, res, next) => {
+  res.locals.prefijo = PREFIJO;
+  next();
+});
+
 // Redireccionar a '/GeoPanel' que es donde estan definidas las rutas
 app.get('/', (_req, res) => {
-	res.redirect('/GeoPanel');
+	res.redirect(PREFIJO);
 });
 
 // Montar el  enrutador utilizando en el prefijo en la variable global appPrefix
-app.use('/GeoPanel', countriesRouter);
+app.use(PREFIJO, countriesRouter);
 
 // Mensaje para rutas no encontrada para el codigo de estado 404
 app.use((_req, res) => {
