@@ -11,7 +11,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Definir un prefijo global
-const PREFIJO  = '/GeoPanel'; 
+const PREFIJO = '/GeoPanel';
 
 // Configurar motor de vistas
 app.set('view engine', 'ejs');
@@ -25,10 +25,10 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.resolve('./public')));
 app.use(expressLayouts);
 
-// Inyectar el prefijo en las plantillas 
-app.use((req, res, next) => {
-  res.locals.prefijo = PREFIJO;
-  next();
+// Inyectar el prefijo en las plantillas
+app.use((_req, res, next) => {
+	res.locals.prefijo = PREFIJO;
+	next();
 });
 
 // Redireccionar a '/GeoPanel' que es donde estan definidas las rutas

@@ -1,10 +1,10 @@
-<header class="w-full mb-8">
+<header class="w-full my-8">
     <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-2xl ">Tabla de Países Hispanohablantes de América</h1>
-            <p class="text-lg">Administra los países hispanos de América. Agrega, edita y elimina paises de forma sencilla.</p>
+            <h1 class="text-lg mb-2">Tabla de Países Hispanohablantes de América</h1>
+            <p class="text-sm">Administra los países hispanos de América. Agrega, edita y elimina paises de forma sencilla.</p>
         </div>
-        <a class="" href="<%= prefijo %>/crear">+ Crear País</a>
+        <a class="btn btn--primary" href="<%= prefijo %>/crear">+ Crear País</a>
     </div>
 </header>
 
@@ -31,17 +31,15 @@
     </div>
 <% } else { %>
     
-    <table class="w-full border border-(--border)">
-        <thead>
-            <th></th> 
+    <table class="w-full bg-(--bg-light) p-4 text-sm">
+        <thead class="bg-(--bg-sec) text-(--clr-primary)">
+            <th colspan="2"></th> 
             <th>Nombre</th>
             <th>Capital</th>
-            <th>Fronteras</th>
             <th>Área (km<sup>2</sup>)</th>
             <th>Población</th>
-            <th>Zonas Horárias</th>
-            <th>Indice Gini</th>
             <th>Creador</th>
+            <th>Acción</th>
         </thead> 
         <tbody>
             <% respuesta.paises.forEach((pais) => { %>
@@ -49,10 +47,12 @@
             <% }); %>
         </tbody>
         <!-- Totales de població y area y promedio de gini (solo para los paises que tienen este dato) -->
-        <tfoot>
+        <tfoot class="border-t border-(--border)">
             <tr>
-                <td>Area Total(Km<sup>2</sup>): <%= respuesta.totalArea.toLocaleString('es-AR') %></td>
-                <td>Población Total: <%= respuesta.totalPoblacion.toLocaleString('es-AR') %> Habitantes</td>
+                <td colspan="100%">
+                    <span class="mr-8">Area Total(Km<sup>2</sup>): <%= respuesta.totalArea %></span>
+                    <span>Población Total: <%= respuesta.totalPoblacion %></span>
+                </td>
             </tr>
         </tfoot>
     </table>

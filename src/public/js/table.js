@@ -12,4 +12,4 @@ document.addEventListener('DOMContentLoaded', () => {
       arrow.classList.toggle('arrow-open');
     })
   })
-})
+});

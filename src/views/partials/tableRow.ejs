@@ -1,27 +1,18 @@
-<tr class="rowmain cursor-pointer transition-(--transition) hover:bg-(--surface-2)" data-id="<%= pais._id %>" data-target="det-<%= pais._id %>">
+
+<tr class="rowmain relative cursor-pointer" data-countryId="<%= pais._id %>" data-target="det-<%= pais._id %>">
     <td>
-        <i class="inline-block not-italic transition-(--transition)" id="arrow-<%= pais._id %>">&#9662;</i>
+        <i class="chevron fa-solid fa-chevron-down " id="chev-<%= pais._id %>"></i>
     </td>
     <td>
-        <img src="<%= pais.bandera %>" class="w-7" alt="Bandera de <%= pais.nombre.comun %>">
+        <img src="<%= pais.bandera %>" class="inline-block min-w-14 max-w-14" alt="Bandera de <%= pais.nombre.comun %>">
     </td>
-    <td>
+    <td class="">
         <span><%= pais.nombre.comun %></span>
-        <span><%= pais.nombre.oficial %></span>
+        <br>
+        <span class="text-xs"><%= pais.nombre.oficial %></span>
     </td>
     <td>
         <%= pais.capital.join(', ') %>
-    </td>
-    <td>
-        <% if (pais.fronteras && pais.fronteras.length > 0) { %>
-            <div>
-                <% pais.fronteras.forEach((frontera) => { %>
-                    <span><%= frontera %></span>
-                <% }) %>
-            </div>
-        <% } else { %>
-            <span>-</span>
-        <% } %>
     </td>
     <td>
         <%= pais.area.toLocaleString('es-AR') %>
@@ -30,34 +21,20 @@
         <%= pais.poblacion.toLocaleString('es-AR') %>
     </td>
     <td>
-        <div>
-            <% pais.zonasHorarias.forEach((zonaHoraria) => { %>
-                <span><%= zonaHoraria %></span>
-            <% }) %>
-        </div>
-    </td>
-    <td>
-        <% if (pais.indiceGini && pais.indiceGini.valor) { %>
-            <span><%= pais.indiceGini.valor.toFixed(1) %></span>
-            <span><%= pais.indiceGini.anio %></span>
-        <% } else { %>
-            <span>-</span>
-        <% } %>
-    </td>
-    <td>
         <%= pais.creador %>
     </td>
     <!-- Botones para editar/eliminar -->
-    <td>
-        <a href="<%= prefijo %>l/<%= pais._id %>/editar">Editar</a>
-        <form action="<%= prefijo %>/<%= pais._id %>/eliminar?_method=DELETE" method="POST">
-            <button type="submit">Eliminar</button>
+    <td class="rowaction flex gap-1 items-center">
+        <a class="btn btn--primary" href="<%= prefijo %>/<%= pais._id %>/editar">Editar</a>
+        <form class="rowaction" action="<%= prefijo %>/<%= pais._id %>/eliminar?_method=DELETE" method="POST">
+            <button type="submit" class="btn btn--delete">Eliminar</button>
         </form>
     </td>
 </tr>
 
+
 <tr class="rowdetail">
-    <td colspan="7" >
+    <td colspan="100%" >
         <div class="detail-inner" id="det-<%= pais._id %>">
             <div class="detail-grid">
                 <div class="detail-item">
@@ -81,12 +58,45 @@
                     <span><%= pais.miembroONU === true ? 'Si' : 'No' %></span>
                 </div>
                 <div class="detail-item">
-                    <label>FIFA</label>
+                    <label>FIFA:</label>
                     <span><%= pais.fifa ? pais.fifa : '-' %></span>
                 </div>
                 <div class="detail-item">
-                    <label>Coordenadas</label>
+                    <label>Coordenada:</label>
                     <span>Latitud: <%= pais.coordenadas.latitud %> - Longitud: <%= pais.coordenadas.longitud %></span>
+                </div>
+                <div class="detail-item">
+                    <label>Fronteras:</label>
+                    <span>
+                        <% if (pais.fronteras && pais.fronteras > 0) { %>
+                            <%= pais.fronteras.join(', ') %>
+                        <% } else { %>
+                            <%= 'Sin Fronteras' %>
+                        <% } %>
+                    </span>
+                </div>
+                <div class="detail-item">
+                    <label>Zonas Horarias</label>
+                    <span>
+                        <% pais.zonasHorarias.forEach((zonaHor) => { %>
+                           <%= zonaHor %> 
+                        <% }) %>
+                    </span>
+                </div>
+                <div class="detail-item">
+                    <label>Indice de Gini</label>
+                        <% if (pais.indiceGini && pais.indiceGini.valor) { %>
+                            <span>
+                                <%= pais.indiceGini.valor %>
+                            </span>
+                            <small>
+                                <%= pais.indiceGini.anio %>
+                            </small>
+                        <% } else { %>
+                            <span>
+                                <%= 'Sin datos' %>
+                            </span>
+                        <% } %>
                 </div>
             </div>
         </div>
