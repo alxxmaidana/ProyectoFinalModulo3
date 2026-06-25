@@ -26,7 +26,7 @@
     <!-- Botones para editar/eliminar -->
     <td class="rowaction flex gap-1 items-center">
         <a class="btn btn--primary" href="<%= prefijo %>/<%= pais._id %>/editar">Editar</a>
-        <form class="rowaction" action="<%= prefijo %>/<%= pais._id %>/eliminar?_method=DELETE" method="POST">
+        <form class="rowaction" id="deleteForm" action="<%= prefijo %>/<%= pais._id %>/eliminar?_method=DELETE" method="POST">
             <button type="submit" class="btn btn--delete">Eliminar</button>
         </form>
     </td>

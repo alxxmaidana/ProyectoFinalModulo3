@@ -1,3 +1,55 @@
-<form action="">
-    <h2>Formulario para crear o editar</h2>
-</form>
+<!-- Name section -->
+<section class="text-sm">
+    <h2 class="text-lg">Nombre</h2>
+    <div class="grid grid-cols-2">
+        <div> 
+            <label for="nombreComun">Nombre común <span class="">*</span>:</label>
+            <input type="text" id="nombreComun" name="nombre[comun]" value="<%= pais ? pais.nombre.comun : '' %>">
+        </div>
+        <div>
+            <label for="nombreOficial">Nombre oficial <span class="">*</span>:</label>
+            <input type="text" id="nombreOficial" name="nombre[oficial]" value="<%= pais ? pais.nombre.oficial : ''%>">
+        </div>
+    </div>
+</section>
+
+<!-- Flag and capital section -->
+<section>
+    <h2>Bandera y capital:</h2>
+    <div class="grid grid-cols-2">
+        <!-- Dropdown container -->
+        <div>
+            <div>
+                <label for="bandera">Bandera</label>
+                <input type="hidden" id="bandera" value="<%= pais ? pais.bandera : '' %>">
+            </div>
+
+            <div class="custom-select-bandera">
+                <!-- Botón -->
+                <button type="button" id="selectorBandera" class="form-select d-flex align-items-center gap-2 text-start">
+                <% if (pais && pais.bandera) { %>
+                    <!-- Si es para editar, precarga en el botón la imágen de la bandera del país -->
+                    <img src="<%= pais.bandera %>" width="32" height="20" style="object-fit: cover;">
+                <% } else { %>
+                    <!-- si es para agregar, mostrar este label -->
+                    <span>Selecciona una bandera</span>
+                <% } %>
+                </button>
+
+                <!-- Dropdown de banderas -->
+                <div id="dropdownBandera" class="border rounded mt-1 p-2 bg-white" style="
+                display:none;
+                max-height:300px;
+                overflow-y:auto;
+                ">
+                    <!-- Reccore el array de banderas y muestra la imágen de cada una -->
+                    <% datosFormulario.banderasURL.forEach((bandera) => { %>
+                        <div class="opcion-bandera d-flex align-items-center gap-2 p-2" data-url="<%= bandera %>"style="cursor:pointer;">
+                            <img src="<%= bandera %>" width="40" height="25" style="object-fit: cover;">
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
