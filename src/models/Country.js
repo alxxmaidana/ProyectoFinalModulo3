@@ -41,7 +41,8 @@ const PaisSchema = new mongoose.Schema(
 				message: 'El campo zonasHorarias es obligatorio',
 			},
 		},
-		monedas: [{
+		moneda: [{
+			_id: false,
 			simbolo: { type: String, trim: true, required: true, maxlength: 5 },
 			nombre: {
 				type: String,
@@ -51,7 +52,7 @@ const PaisSchema = new mongoose.Schema(
 				maxlength: 40,
 			}
 		}],
-		
+
 		independiente: { type: Boolean, required: true, default: false },
 		miembroONU: { type: Boolean, required: true, default: false },
 		salidaAlMar: { type: Boolean, required: true, default: false },
@@ -66,10 +67,11 @@ const PaisSchema = new mongoose.Schema(
 			longitud: { type: Number, min: -180, max: 180, required: true },
 		},
 		// Algunos paises no tienen dato
-		indiceGini: {
+		indiceGini: [{
+			_id: false,
+			anio: { type: Number, min: 1912, max: new Date().getFullYear() },
 			valor: { type: Number, min: 0, max: 100 },
-			anio: { type: Number, min: 1912, max: new Date().getFullYear() }, // Recortar el rango del año 1912 - 2026;
-		},
+		}],
 		tipoDocumento: {
 			type: String,
 			trim: true,
