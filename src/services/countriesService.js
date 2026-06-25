@@ -1,15 +1,16 @@
+import { compileFunction } from 'node:vm';
 import Countries from '../repositories/countriesRepository.js';
+import { getCipherInfo } from 'node:crypto';
 
 // --------------------- Seed de países ------------------------------ //
 
 // Recopilar datos de los paises para formulario
 export function recopilarDatosPaises(paises) {
-	const banderasURL = [];
+	let banderasURL = [];
 	let zonasHorarias = [];
-	const subregiones = [];
-
+	let subregiones = [];
 	paises.forEach((pais) => {
-		banderasURL.push(pais.flags.png);
+		banderasURL.push(pais.flag.url_png);
 		const zonasHorariasPais = pais.timezones;
 		for (let i = 0; i < zonasHorariasPais.length; i++) {
 			// Si la zona horaria no está en el array, la agrega
@@ -18,102 +19,84 @@ export function recopilarDatosPaises(paises) {
 			}
 		}
 		const subregionPais = pais.subregion;
-		if (!subregiones.includes(subregionPais)) {
+		if (!subregiones.includes(subregionPais)) {	
 			subregiones.push(subregionPais);
 		}
 	});
 	// Agregar la opción "Sin Subregión" al array de subregiones, para los países que no tienen subregión.
-	subregiones.push('Sin Subregión');
-	zonasHorarias = ordenarZonasHorarias(zonasHorarias);
+	zonasHorarias = ordenarAlfabeticamente(zonasHorarias);
+	subregiones = ordenarAlfabeticamente(subregiones);
 	return { banderasURL, zonasHorarias, subregiones };
 }
 
-function ordenarZonasHorarias(zonasHorarias) {
-	zonasHorarias.sort((a, b) => a.localeCompare(b));
-	return zonasHorarias;
+// Ordenar alfabeticamente zonasHorarias y subregiones
+function ordenarAlfabeticamente(array) {
+	return array.sort((a, b) => a.localeCompare(b));
 }
 
-// Upsert del documento con los datos recopilados
+// Hacer el upsert del documento con los datos recopilados llamando al método del repositorio
 export async function uspertDocumentoFormulario(paises) {
 	const documento = recopilarDatosPaises(paises);
 	return await Countries.upsertDocumento(documento);
 }
 
 function filtrarPaisesHispanos(paises) {
-	return paises.filter((pais) => pais.languages.spa);
+	return paises.filter((pais) => {
+		return pais.languages.some(lang => lang.bcp47 === 'es');
+	});
 }
-
-/* ***************************************************************
-El objeto 'currencies' tiene como clave el código ISO de la moneda, 
-y como valor un objeto con el nombre y simbolo de la moneda.
-
-Con Object.values() obtenemos los valores del la clave del objeto 'currencies'
-(la clave es el código ISO de la moneda), obteniendo un array de objeto con el 
-nombre y el simbolo de la moneda, y con [0] acccemos al primer objeto del array, 
-que sería la primera moneda del país.
-***************************************************************** */
-
-/* *****************************************************************
-El objeto 'gini' tiene al año como clave y el indice de Gini como su valor.
-Con objet.values() obtenemos los valores del objeto 'gini' (el valor indice gini),
-y con Object.keys() obtenemos las claves del objeto 'gini' (año de midición).
-
-Se usa '?' para evitar el error de que el país no tenga el campo, si no lo tiene
-le asigna null.
-****************************************************************** */
 
 // Formatear los pases al esquema y filtra los campos necesarios
 function transformarPaisesAlFormatoModelo(paises) {
 	return paises.map((pais) => {
-		const primeraMoneda = Object.values(pais.currencies)[0] ?? null;
-		const moneda = primeraMoneda
-			? {
-					simbolo: primeraMoneda.symbol ?? 'N/A',
-					nombre: primeraMoneda.name ?? 'N/A',
-				}
-			: null;
-		const gini = pais.gini
-			? {
-					valor: Object.values(pais?.gini)[0],
-					anio: Object.keys(pais?.gini)[0],
-				}
-			: null;
+		// Obtener las capitales
+		const capitales = pais.capitals.map((capital) => capital.name);
+
+		// Obtener las monedas en un array
+		const monedas = pais.currencies.map((currency) => {
+			return { simbolo: currency.symbol, nombre: currency.name }
+		});
+
+		// Obtener mediciones del indice de Gini
+		const claves = Object.keys(pais.economy.gini_coefficient);
+		const gini = claves.map((clave) => {
+			return { anio: Number(clave), valor: pais.economy.gini_coefficient[clave] };
+		});
 
 		return {
 			nombre: {
-				comun: pais.name.nativeName.spa.common ?? pais.name?.common,
-				oficial: pais.name.nativeName.spa.official ?? pais.name?.official,
+				comun: pais.names.translations.spa.common ?? pais.names?.common,
+				oficial: pais.names.translations.spa.official ?? pais.names?.official
 			},
-			bandera: pais.flags.png ?? '',
-			capital: pais.capital ?? [],
-			subregion: pais.subregion ?? 'Sin Subregión',
-			fronteras: pais.borders ?? [],
-			area: pais.area ?? 0,
+			bandera: pais.flag.url_png ?? null,
+			capital: capitales,
+			subregion: pais.subregion ?? null,
+			fronteras: pais.borders ?? null,
+			area: pais.area.kilometers ?? 1,
 			poblacion: pais.population ?? 1,
 			zonasHorarias: pais.timezones ?? [],
-			moneda: moneda,
-			independiente: pais.independent ?? false,
-			miembroONU: pais.unMember ?? false,
+			moneda: monedas,
+			independiente: !pais.classification.dependency ?? false,
+			miembroONU: pais.classification.un_member ?? false,
 			salidaAlMar: !pais.landlocked ?? false,
-			fifa: pais.fifa ?? null,
-			latitudLongitud: pais.latlng ?? [0.0, 0.0],
+			fifa: pais.codes.fifa ?? null,
 			coordenadas: {
-				latitud: pais.latlng[0] ?? 0.0,
-				longitud: pais.latlng[1] ?? 0.0,
+				latitud: pais.coordinates.lat ?? 0.0,
+				longitud: pais.coordinates.lng ?? 0.0,
 			},
 			indiceGini: gini,
 		};
 	});
 }
 
-// Upsert paises hispanos
+// Hacer upsert de los paises filtrados con los campos formateados llamando al método del repositorio
 export async function upsertPaisesHispanos(paises) {
 	const paisesHispanos = filtrarPaisesHispanos(paises);
 	const paisesFormateados = transformarPaisesAlFormatoModelo(paisesHispanos);
 	return await Countries.uspertPaises(paisesFormateados);
 }
 
-// ------------------------------------------------------------------- //
+// ----------------------------------------------------------- //
 
 export async function obtenerTodosLosPaises() {
 	const paisesObtenidos = await Countries.obtenerPaises();
