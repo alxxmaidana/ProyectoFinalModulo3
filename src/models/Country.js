@@ -41,7 +41,7 @@ const PaisSchema = new mongoose.Schema(
 				message: 'El campo zonasHorarias es obligatorio',
 			},
 		},
-		moneda: {
+		monedas: [{
 			simbolo: { type: String, trim: true, required: true, maxlength: 5 },
 			nombre: {
 				type: String,
@@ -49,8 +49,9 @@ const PaisSchema = new mongoose.Schema(
 				required: true,
 				minlength: 3,
 				maxlength: 40,
-			},
-		},
+			}
+		}],
+		
 		independiente: { type: Boolean, required: true, default: false },
 		miembroONU: { type: Boolean, required: true, default: false },
 		salidaAlMar: { type: Boolean, required: true, default: false },
