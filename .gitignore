@@ -1,2 +1,6 @@
+## Librerias y dependencias externas del proyecto
 node_modules/
+
+## Archivo de configuración de variables de entorno
 .env
+
